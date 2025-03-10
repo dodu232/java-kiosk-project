@@ -28,7 +28,6 @@ public class Menu {
             menuItemList.add(new MenuItem("감자 튀김  ", 4900, "이거 안시키면 맛알못"));
             menuItemList.add(new MenuItem("오징어 튀김", 5400, "가끔 먹고싶은 별미"));
             menuItemList.add(new MenuItem("치킨너겟   ", 5900, "머스타드와 함께"));
-
         }
     }
 
