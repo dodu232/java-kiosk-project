@@ -11,9 +11,12 @@ public class MenuItem {
         this.desc = desc;
     }
 
+    public int getPrice(){
+        return price;
+    }
+
     @Override
     public String toString(){
         return String.format(" : %-5s  | ￦ %-10d | %s", name, price, desc);
     }
-
 }
