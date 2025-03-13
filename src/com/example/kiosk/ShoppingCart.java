@@ -27,12 +27,19 @@ public class ShoppingCart {
     this.totalPrice = 0;
   }
 
+  // 장바구니 비었는지 확인
+  public boolean checkShoppingCartEmpty() {
+    return this.shoppingList.isEmpty();
+  }
+
   // 장바구니 목록 출력
   public void printShoppingCart() {
+    System.out.println();
     if (this.shoppingList.isEmpty()) {
       System.out.println("장바구니가 비어 있습니다.");
       return;
     }
+    System.out.println("----장바구니 목록----");
     for (int i = 0; i < this.shoppingList.size(); i++) {
       System.out.println((i + 1) + this.shoppingList.get(i).toString());
     }
