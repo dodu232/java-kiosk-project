@@ -6,76 +6,135 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Kiosk {
-    private final List<Menu> menuList;
-    private final Scanner sc;
-    private final int END = -1;
 
-    public Kiosk() {
-        sc = new Scanner(System.in);
-        menuList  = new ArrayList<>();
-        initMenu();
-    }
+  private final List<Menu> menuList;
+  private final ShoppingCart shoppingCart;
+  private final Scanner sc;
+  private final int SHOPPINGCART = 9;
+  private final int END = 0;
 
-    private void initMenu(){
-        menuList.add(new Menu("Burgers"));
-        menuList.add(new Menu("Drinks"));
-        menuList.add(new Menu("Desserts"));
-    }
+  public Kiosk() {
+    this.sc = new Scanner(System.in);
+    this.menuList = new ArrayList<>();
+    initMenu();
+    this.shoppingCart = new ShoppingCart();
+  }
 
-    public void start() {
-        System.out.println("----------- 도두 버거 -----------");
-        System.out.println("도두 버거에 오신것을 환영합니다.");
+  private void initMenu() {
+    this.menuList.add(new Menu(Category.BURGERS));
+    this.menuList.add(new Menu(Category.DRINKS));
+    this.menuList.add(new Menu(Category.DESSERTS));
+  }
 
-        while (true) {
-            // 반복문을 활용해 List 안에 있는 MenuItem을 하나씩 출력
-            System.out.println("[ MAIN MENU ]");
-            for (int i = 0; i < menuList.size(); i++) {
-                System.out.println((i + 1) + menuList.get(i).toString());
-            }
-            System.out.println("0 : 종료");
+  public void start() {
+    System.out.println("----------- 도두 버거 -----------");
+    System.out.println("도두 버거에 오신것을 환영합니다.");
 
-            // 숫자를 입력 받기
-            int idx1 = checkInt();
+    while (true) {
+      System.out.println();
 
-            // 입력된 숫자에 따른 처리
-            if (idx1 == END) {
-                break;
-            }
+      printMainMenu();
 
-            // 선택한 메뉴 : 이름, 가격, 설명
-            System.out.println();
-            menuList.get(idx1).printMenuItemList();
+      // 선택 받기
+      int idx = checkInt(END, menuList.size());
 
-            int idx2 = checkInt();
-
-            if(idx2 == END){
-                System.out.println();
-                continue;
-            }
-
-            System.out.println("선택한 메뉴" + menuList.get(idx1).getMenuItemList().get(idx2));
-            System.out.println();
+      if (idx == END) {  // 0이면 종료
+        break;
+      } else if (idx == 9) { // 9면 장바구니 출력
+        if (handleShoppingCart()) {
+          continue;
+        } else {
+          break;
         }
+      }
+      idx--;
+      Menu selectMenu = printSubMenu(idx);
 
-        // 프로그램을 종료
-        System.out.println("방문해 주셔서 감사합니다. ^____^");
+      idx = checkInt(END, selectMenu.getMenuItemList().size());
+
+      if (idx == END) {
+        continue;
+      }
+
+      idx--;
+      MenuItem selectSubMenu = printSelectMenu(selectMenu, idx);
+
+      int select = checkInt(1, 2);
+      if (select == 1) {
+        shoppingCart.addMenuItem(selectSubMenu);
+      }
     }
 
-    public int checkInt() {
-        while (true) {
-            System.out.print("메뉴를 선택해 주세요: ");
-            try {
-                int select = sc.nextInt() - 1;
-                sc.nextLine();
+    // 프로그램을 종료
+    System.out.println("방문해 주셔서 감사합니다. ^____^");
+  }
 
-                if (select < menuList.size() && select >= END) {
-                    return select;
-                }
-                System.out.println("메뉴 판에 있는 번호를 입력하세요. ");
-            } catch (InputMismatchException e) {
-                System.out.println("정수를 입력하세요.");
-                sc.nextLine();
-            }
+  // 쇼핑카트 기능 관리
+  private boolean handleShoppingCart() {
+    shoppingCart.printShoppingCart();
+    System.out.println("1. 구매 2. 초기화 0. 뒤로가기");
+    int select = checkInt(END, 2);
+    System.out.println();
+
+    if (select == 0) {
+      return true;
+    } else if (select == 1) {
+      System.out.println("구매가 완료 되었습니다.");
+      shoppingCart.resetShoppingCart();
+      return false;
+    } else if (select == 2) {
+      System.out.println("장바구니를 비웠습니다.");
+      shoppingCart.resetShoppingCart();
+      return true;
+    }
+    return false;
+  }
+
+  // 카테고리 출력
+  private void printMainMenu() {
+    System.out.println("[ MAIN MENU ]");
+    for (int i = 0; i < menuList.size(); i++) {
+      System.out.println((i + 1) + menuList.get(i).toString());
+    }
+    if (!shoppingCart.checkShoppingCartEmpty()) {
+      System.out.println("9.  " + shoppingCart.toString());
+    }
+    System.out.println("0.  종료");
+  }
+
+  // 서브메뉴 출력
+  private Menu printSubMenu(int idx) {
+    System.out.println();
+    Menu selectMenu = menuList.get(idx);
+    selectMenu.printMenuItemList();
+    return selectMenu;
+  }
+
+  // 선택한 메뉴 출력
+  private MenuItem printSelectMenu(Menu menu, int idx) {
+    MenuItem subMenu = menu.getMenuItemList().get(idx);
+    System.out.println();
+    System.out.println("선택한 메뉴" + subMenu.toString());
+    System.out.println("1. 추가 2. 취소");
+    return subMenu;
+  }
+
+  public int checkInt(int min, int max) {
+    while (true) {
+      System.out.print("입력: ");
+      try {
+        int select = sc.nextInt();
+        sc.nextLine();
+
+        if ((select < min || select > max) && select != SHOPPINGCART) {
+          System.out.println("범위 내의 숫자를 입력하세요. ");
+          continue;
         }
+        return select;
+      } catch (InputMismatchException e) {
+        System.out.println("정수를 입력하세요.");
+        sc.nextLine();
+      }
     }
+  }
 }
