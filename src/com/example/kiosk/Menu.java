@@ -25,9 +25,9 @@ public class Menu {
         this.menuItemList.add(new MenuItem("새우 버거  ", 5400, "새우가 들어간 새우 버거"));
       }
       case DRINKS -> {
-        this.menuItemList.add(new MenuItem("콜라    ", 2000, "스파클링 원탑"));
-        this.menuItemList.add(new MenuItem("사이다", 2000, "청량청량해"));
-        this.menuItemList.add(new MenuItem("물      ", 1300, "진정한 제로 칼로리"));
+        this.menuItemList.add(new MenuItem("콜라       ", 2000, "스파클링 원탑"));
+        this.menuItemList.add(new MenuItem("사이다     ", 2000, "청량청량해"));
+        this.menuItemList.add(new MenuItem("물         ", 1300, "진정한 제로 칼로리"));
       }
       case DESSERTS -> {
         this.menuItemList.add(new MenuItem("감자 튀김  ", 4900, "이거 안시키면 맛알못"));
