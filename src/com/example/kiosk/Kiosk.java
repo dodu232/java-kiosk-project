@@ -31,35 +31,45 @@ public class Kiosk {
     System.out.println("도두 버거에 오신것을 환영합니다.");
 
     while (true) {
-      System.out.println();
-
       printMainMenu();
 
-      // 선택 받기
-      int idx = checkInt(END, menuList.size());
+      int idx = inputValidMenu(menuList.size());
 
       if (idx == END) {  // 0이면 종료
         break;
       } else if (idx == 9) { // 9면 장바구니 출력
-        if (handleShoppingCart()) {
+        shoppingCart.printShoppingCart();
+        System.out.println("1. 구매 2. 초기화 0. 뒤로가기");
+        int select = inputValidSubMenu(END, 2);
+        System.out.println();
+
+        if (select == 0) {
           continue;
-        } else {
+        } else if (select == 1) {
+          System.out.println("구매가 완료 되었습니다.");
+          shoppingCart.resetShoppingCart();
           break;
+        } else if (select == 2) {
+          System.out.println("장바구니를 비웠습니다.");
+          shoppingCart.resetShoppingCart();
+          continue;
         }
       }
+
+      // 서브메뉴 출력
       idx--;
       Menu selectMenu = printSubMenu(idx);
-
-      idx = checkInt(END, selectMenu.getMenuItemList().size());
+      idx = inputValidSubMenu(END, selectMenu.getMenuItemList().size());
 
       if (idx == END) {
         continue;
       }
 
+      // 선택한 메뉴 출력
       idx--;
       MenuItem selectSubMenu = printSelectMenu(selectMenu, idx);
 
-      int select = checkInt(1, 2);
+      int select = inputValidSubMenu(1, 2);
       if (select == 1) {
         shoppingCart.addMenuItem(selectSubMenu);
       }
@@ -69,29 +79,9 @@ public class Kiosk {
     System.out.println("방문해 주셔서 감사합니다. ^____^");
   }
 
-  // 쇼핑카트 기능 관리
-  private boolean handleShoppingCart() {
-    shoppingCart.printShoppingCart();
-    System.out.println("1. 구매 2. 초기화 0. 뒤로가기");
-    int select = checkInt(END, 2);
-    System.out.println();
-
-    if (select == 0) {
-      return true;
-    } else if (select == 1) {
-      System.out.println("구매가 완료 되었습니다.");
-      shoppingCart.resetShoppingCart();
-      return false;
-    } else if (select == 2) {
-      System.out.println("장바구니를 비웠습니다.");
-      shoppingCart.resetShoppingCart();
-      return true;
-    }
-    return false;
-  }
-
   // 카테고리 출력
   private void printMainMenu() {
+    System.out.println();
     System.out.println("[ MAIN MENU ]");
     for (int i = 0; i < menuList.size(); i++) {
       System.out.println((i + 1) + menuList.get(i).toString());
@@ -119,20 +109,41 @@ public class Kiosk {
     return subMenu;
   }
 
-  public int checkInt(int min, int max) {
+  private int inputValidMenu(int max) {
     while (true) {
       System.out.print("입력: ");
       try {
         int select = sc.nextInt();
-        sc.nextLine();
 
-        if ((select < min || select > max) && select != SHOPPINGCART) {
+        if (select >= END && select <= max) {
+          return select;
+        } else if (select == SHOPPINGCART && !shoppingCart.checkShoppingCartEmpty()) {
+          return select;
+        } else {
           System.out.println("범위 내의 숫자를 입력하세요. ");
-          continue;
         }
-        return select;
       } catch (InputMismatchException e) {
         System.out.println("정수를 입력하세요.");
+      } finally {
+        sc.nextLine();
+      }
+    }
+  }
+
+  private int inputValidSubMenu(int min, int max) {
+    while (true) {
+      System.out.print("입력: ");
+      try {
+        int select = sc.nextInt();
+
+        if (!(select >= min && select <= max)) {
+          System.out.println("범위 내의 숫자를 입력하세요. ");
+        } else {
+          return select;
+        }
+      } catch (InputMismatchException e) {
+        System.out.println("정수를 입력하세요.");
+      } finally {
         sc.nextLine();
       }
     }
