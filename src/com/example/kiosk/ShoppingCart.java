@@ -41,7 +41,8 @@ public class ShoppingCart {
     }
     System.out.println("----장바구니 목록----");
     this.shoppingList.forEach((key, value) -> {
-      System.out.println(key.toShoppingCartList() + value + "개  |  ￦ " + (key.getPrice() * value));
+      System.out.println(
+          key.toShoppingCartFormat() + value + "개  |  ￦ " + (key.getPrice() * value));
     });
     System.out.println(this);
   }
