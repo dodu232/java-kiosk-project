@@ -21,4 +21,8 @@ public class MenuItem {
   public String toString() {
     return String.format(".  %-5s  | ￦ %-10d | %s", this.name, this.price, this.desc);
   }
+
+  public String toShoppingCartList() {
+    return String.format("%-5s  | ￦ %-8d|  ", this.name, this.price);
+  }
 }
