@@ -22,7 +22,7 @@ public class MenuItem {
     return String.format(".  %-5s  | ￦ %-10d | %s", this.name, this.price, this.desc);
   }
 
-  public String toShoppingCartList() {
+  public String toShoppingCartFormat() {
     return String.format("%-5s  | ￦ %-8d|  ", this.name, this.price);
   }
 }
