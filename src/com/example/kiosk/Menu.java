@@ -3,6 +3,7 @@ package com.example.kiosk;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 // menuItem List를 가진 카테고리 클래스
 public class Menu {
@@ -45,9 +46,13 @@ public class Menu {
   // category에 소속된 menuItem을 모두 출력
   public void printMenuItemList() {
     System.out.println("[ " + this.category.getLabel() + " ]");
-    for (int i = 0; i < this.menuItemList.size(); i++) {
-      System.out.println((i + 1) + this.menuItemList.get(i).toString());
-    }
+    AtomicInteger counter = new AtomicInteger(1);
+    menuItemList.stream()
+        .forEach(item -> System.out.println(counter.getAndIncrement() + item.toString()));
+
+//    for (int i = 0; i < this.menuItemList.size(); i++) {
+//      System.out.println((i + 1) + this.menuItemList.get(i).toString());
+//    }
     System.out.println("0.  뒤로가기");
   }
 

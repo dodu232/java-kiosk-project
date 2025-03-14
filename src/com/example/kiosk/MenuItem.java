@@ -17,6 +17,10 @@ public class MenuItem {
     return this.price;
   }
 
+  public String getName() {
+    return this.name;
+  }
+
   @Override
   public String toString() {
     return String.format(".  %-5s  | ￦ %-10d | %s", this.name, this.price, this.desc);
